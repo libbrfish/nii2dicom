@@ -1,0 +1,12 @@
+[project]
+name = "nii2dcm-docker"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "argparse>=1.4.0",
+    "nibabel>=5.3.2",
+    "numpy>=2.3.4",
+    "pydicom>=3.0.1",
+]
