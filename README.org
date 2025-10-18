@@ -23,7 +23,8 @@
 * Requirements
   - Python ≥ 3.12
   - Docker installed and available in =PATH=
-  - The following Docker image available locally:
+  - uv (astral)
+  - The following Docker image available locally (Dockerfile available):
     - =nifti2dicom_ubuntu:0.1=
 
   
