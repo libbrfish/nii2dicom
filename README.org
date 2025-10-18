@@ -1,0 +1,17 @@
+
+
+* CLI:
+
+nii2dcm -i input -o output -d donor_dcm -n
+--input: input nifti
+--output: output dcm file
+--donor: donor dcm dir
+--normalize (default: False): should the window level and width be normalized (nifti has floats, while dicom has signed int16, so not normalizing might result in loss of contrast or aliasing)
+
+
+* Steps
+1. Create a temp work dir
+2. Normalize the nifti image
+3. Convert nifti_norm to dicom using nifti2dicom (docker)
+4. Convert 2d dicom to 3d dicom image using medcon
+5. Correct the dicomtags of the 3d dicom file
