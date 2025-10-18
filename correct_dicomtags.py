@@ -25,12 +25,12 @@ COPY_DICOM_TAGS = {
     "ManufacturerModelName",
     "Modality",
     "StudyDescription",
+    "InstitutionName",
 }
 
-SERIES_NUMBER = "0"
 IMAGE_COMMENTS = "*** NOT APPROVED FOR CLINICAL USE ***"
 ACCESSION_NUMBER = "1"
-INSTITUTION_NAME = "KULEUVEN"
+INSTITUTION_NAME = "UZLEUVEN"
 
 
 
@@ -73,7 +73,7 @@ def correct_dicomtags(input: str,
 
     # Additional tags
     update_dicom_tags["SeriesDescription"] = label
-    update_dicom_tags["InstitutionName"] = INSTITUTION_NAME
+    # update_dicom_tags["InstitutionName"] = INSTITUTION_NAME
     update_dicom_tags["ImageComments"] = IMAGE_COMMENTS
     update_dicom_tags["AccessionNumber"] = ACCESSION_NUMBER
     update_dicom_tags["SeriesNumber"] = seriesnumber

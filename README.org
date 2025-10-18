@@ -1,17 +1,112 @@
+#+TITLE: nii2dcm.py
+#+AUTHOR: Your Name
+#+OPTIONS: toc:t num:t
+#+PROPERTY: header-args :tangle no
 
+* Overview
+  =nii2dcm.py= converts a NIfTI (.nii or .nii.gz) medical image into a DICOM (.dcm)
+  image or series of images, using a donor DICOM file as a reference for metadata.
 
-* CLI:
+  The script can optionally normalize the input image to a signed 16-bit integer
+  format before conversion.
 
-nii2dcm -i input -o output -d donor_dcm -n
---input: input nifti
---output: output dcm file
---donor: donor dcm dir
---normalize (default: False): should the window level and width be normalized (nifti has floats, while dicom has signed int16, so not normalizing might result in loss of contrast or aliasing)
+  Internally, it performs the following steps:
 
+  1. (Optional) Normalize the NIfTI image.
+  2. Convert the NIfTI file to a set of 2D DICOM slices.
+  3. Stack those slices into a single 3D DICOM volume.
+  4. Correct the resulting DICOM metadata using the donor DICOM file.
 
-* Steps
-1. Create a temp work dir
-2. Normalize the nifti image
-3. Convert nifti_norm to dicom using nifti2dicom (docker)
-4. Convert 2d dicom to 3d dicom image using medcon
-5. Correct the dicomtags of the 3d dicom file
+  All conversions are handled using Dockerized tools (e.g., =nifti2dicom= and =medcon=),
+  so you don’t need to install them locally.
+
+* Requirements
+  - Python ≥ 3.12
+  - Docker installed and available in =PATH=
+  - The following Docker image available locally:
+    - =nifti2dicom_ubuntu:0.1=
+
+  
+* Installation
+
+** uv python
+#+begin_src bash
+uv sync
+#+end_src
+
+** docker image
+  #+begin_src bash
+  docker build -t nifti2dicom_ubuntu:0.1 .
+  #+end_src
+
+* Usage
+
+  Run the script from the command line:
+
+  #+begin_src bash
+  uv run nii2dcm.py -i input_image.nii -o output_dir -d donor.dcm -l "SeriesLabel" -n 101
+  #+end_src
+
+  By default, normalization is *enabled*.  
+  To skip normalization, add the =--no-normalize= (or =-x=) flag:
+
+  #+begin_src bash
+  python nii2dcm.py -i image.nii -o output_dir -d donor.dcm -l "Test" -n 200 -x
+  #+end_src
+
+* Command-line Arguments
+
+  | Flag | Long Option | Required | Description |
+  |------|--------------|-----------|--------------|
+  | -i   | --input       | Yes | Path to the input NIfTI image file. |
+  | -o   | --output      | Yes | Path to the output DICOM file or directory. |
+  | -d   | --donor       | Yes | Path to the donor DICOM file (used for metadata). |
+  | -l   | --label       | Yes | Series description / label for the new DICOM. |
+  | -n   | --seriesnumber| Yes | DICOM series number. |
+  | -x   | --no-normalize| No  | Disable image normalization (default is enabled). |
+
+  The default behavior is to normalize the NIfTI input before conversion.
+  Normalization converts image intensities to signed 16-bit integer values for
+  better compatibility with DICOM pixel data.
+
+* Example
+  Convert a brain scan with normalization enabled:
+
+  #+begin_src bash
+  python nii2dcm.py \
+      -i brain.nii.gz \
+      -o ./output_dicom \
+      -d donor_example.dcm \
+      -l "Brain MRI" \
+      -n 1001
+  #+end_src
+
+  Skip normalization:
+
+  #+begin_src bash
+  python nii2dcm.py \
+      -i brain.nii.gz \
+      -o ./output_dicom \
+      -d donor_example.dcm \
+      -l "Brain MRI" \
+      -n 1001 \
+      -x
+  #+end_src
+
+* Output
+  The script produces:
+  - A temporary working directory (auto-cleaned after processing)
+  - A directory of 2D DICOM slices (intermediate)
+  - A single 3D DICOM volume (e.g., =medcon.dcm=)
+  - A final DICOM file with metadata corrected based on the donor image.
+
+  The resulting DICOM is saved to the output path provided by =--output=.
+
+* Notes
+  - Make sure Docker has permission to access the directory containing your input files.
+  - Running with =sudo= is not required if you’ve configured Docker for your user.
+  - If you experience permission errors, ensure the Docker container runs with
+    =--user $(id -u):$(id -g)= to preserve file ownership.
+
+* Author
+ Johannes Devos <johannes.1.devos@uzleuven.be>
