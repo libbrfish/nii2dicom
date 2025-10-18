@@ -74,7 +74,7 @@ uv sync
   Convert a brain scan with normalization enabled:
 
   #+begin_src bash
-  python nii2dcm.py \
+  nii2dcm.py \
       -i brain.nii.gz \
       -o ./output_dicom \
       -d donor_example.dcm \
@@ -85,7 +85,7 @@ uv sync
   Skip normalization:
 
   #+begin_src bash
-  python nii2dcm.py \
+ nii2dcm.py \
       -i brain.nii.gz \
       -o ./output_dicom \
       -d donor_example.dcm \
