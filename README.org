@@ -45,14 +45,14 @@ uv sync
   Run the script from the command line:
 
   #+begin_src bash
-  uv run nii2dcm.py -i input_image.nii -o output_dir -d donor.dcm -l "SeriesLabel" -n 101
+  nii2dcm.py -i input_image.nii -o output_dir -d donor.dcm -l "SeriesLabel" -n 101
   #+end_src
 
   By default, normalization is *enabled*.  
   To skip normalization, add the =--no-normalize= (or =-x=) flag:
 
   #+begin_src bash
-  python nii2dcm.py -i image.nii -o output_dir -d donor.dcm -l "Test" -n 200 -x
+  nii2dcm.py -i image.nii -o output_dir -d donor.dcm -l "Test" -n 200 -x
   #+end_src
 
 * Command-line Arguments
