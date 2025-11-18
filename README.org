@@ -60,7 +60,7 @@ uv sync
   | Flag | Long Option | Required | Description |
   |------|--------------|-----------|--------------|
   | -i   | --input       | Yes | Path to the input NIfTI image file. |
-  | -o   | --output      | Yes | Path to the output DICOM file or directory. |
+  | -o   | --output      | Yes | Path to the output DICOM file. |
   | -d   | --donor       | Yes | Path to the donor DICOM file (used for metadata). |
   | -l   | --label       | Yes | Series description / label for the new DICOM. |
   | -n   | --seriesnumber| Yes | DICOM series number. |
@@ -76,7 +76,7 @@ uv sync
   #+begin_src bash
   nii2dcm.py \
       -i brain.nii.gz \
-      -o ./output_dicom \
+      -o output_dicom.dcm \
       -d donor_example.dcm \
       -l "Brain MRI" \
       -n 1001
@@ -87,7 +87,7 @@ uv sync
   #+begin_src bash
  nii2dcm.py \
       -i brain.nii.gz \
-      -o ./output_dicom \
+      -o output_dicom.dcm \
       -d donor_example.dcm \
       -l "Brain MRI" \
       -n 1001 \
@@ -108,6 +108,3 @@ uv sync
   - Running with =sudo= is not required if you’ve configured Docker for your user.
   - If you experience permission errors, ensure the Docker container runs with
     =--user $(id -u):$(id -g)= to preserve file ownership.
-
-* Author
- Johannes Devos <johannes.1.devos@uzleuven.be>
